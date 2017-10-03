@@ -1,20 +1,19 @@
-package com.gumapathi.codepath.twitteroauthclient.Activities;
+package com.gumapathi.codepath.twitteroauthclient.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.gumapathi.codepath.twitteroauthclient.Adapters.TweetAdapter;
-import com.gumapathi.codepath.twitteroauthclient.Fragments.ComposeTweetDialogFragment;
 import com.gumapathi.codepath.twitteroauthclient.Helpers.EndlessRecyclerViewScrollListener;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet_Table;
@@ -25,7 +24,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
@@ -33,35 +31,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static com.gumapathi.codepath.twitteroauthclient.TwitterClient.TWEET_COUNT;
 import static com.gumapathi.codepath.twitteroauthclient.Utils.Utils.checkForInternet;
 
-public class TimelineActivity extends AppCompatActivity implements ComposeTweetDialogFragment.ComposeTweetDialogListener {
+/**
+ * Created by gumapathi on 10/1/17.
+ */
 
+public class HomeFragment extends Fragment implements ComposeTweetDialogFragment.ComposeTweetDialogListener{
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
     EndlessRecyclerViewScrollListener scrollListener;
     boolean startOfOldTweets = false;
     boolean endOfOldTweets = false;
-    int ACTION_COMPOSE_CODE = 20;
-    ComposeTweetDialogFragment composeTweetDialogFragment;
-    ImageView ivProfilePhoto;
     private TwitterClient client;
     private SwipeRefreshLayout swipeContainer;
     boolean noNewTweets = true;
+    public static final String ARG_PAGE = "ARG_PAGE";
+    ComposeTweetDialogFragment composeTweetDialogFragment;
 
+
+    public static HomeFragment newInstance(int page) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_PAGE, page);
+        HomeFragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.gumapathi.codepath.twitteroauthclient.R.layout.activity_timeline);
-        client = TwitterApplication.getRestClient();
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_timeline, container, false);
+        client = TwitterApplication.getRestClient();
+        if (savedInstanceState != null) {
+            Tweet postedTweet = (Tweet) Parcels.unwrap(savedInstanceState.getParcelable("PostedTweet"));
+            tweets.add(0, postedTweet);
+            tweetAdapter.notifyDataSetChanged();
+            Log.i("SAMY", "added to adapter " + postedTweet.getBody());
+            rvTweets.scrollToPosition(0);
+        }
         // Lookup the swipe container view
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -78,13 +96,17 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetD
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        setupProfileImage();
-
-
-        rvTweets = (RecyclerView) findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.rvTweet);
+        FloatingActionButton fabCompose = (FloatingActionButton) view.findViewById(R.id.fabCompose);
+        fabCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                composeNewTweet(v);
+            }
+        });
+        rvTweets = (RecyclerView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.rvTweet);
         tweets = new ArrayList<>();
         tweetAdapter = new TweetAdapter(tweets);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(tweetAdapter);
 
@@ -97,43 +119,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetD
         rvTweets.addOnScrollListener(scrollListener);
         populateTimeline(0, false);
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == ACTION_COMPOSE_CODE) {
-            Tweet postedTweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("PostedTweet"));
-            tweets.add(0, postedTweet);
-            tweetAdapter.notifyDataSetChanged();
-            Log.i("SAMY", "added to adapter");
-            rvTweets.scrollToPosition(0);
-        }
-    }
-
-    private void setupProfileImage() {
-        client.getUserProfile(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    String profileImageUrl = response.getString("profile_image_url");
-                    ivProfilePhoto = (ImageView) findViewById(R.id.ivProfilePhoto);
-                    Glide.with(getApplicationContext())
-                            .load(profileImageUrl)
-                            .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(), 60, 0))
-                            .into(ivProfilePhoto);
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-        });
-
+        return view;
     }
 
     private void populateTimeline(final int page, final boolean refreshing) {
@@ -142,7 +128,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetD
         long storedMaxId = 0;
         boolean isOnline = checkForInternet();
         if(!isOnline) {
-            Toast.makeText(this,"App is offline, showing stored tweets",Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(),"App is offline, showing stored tweets",Toast.LENGTH_LONG).show();
         }
         noNewTweets = true;
         try {
@@ -269,23 +255,23 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetD
         swipeContainer.setRefreshing(false);
     }
 
+
     public void composeNewTweet(View view) {
-        Toast.makeText(this, "Compose clicked", Toast.LENGTH_LONG).show();
-        FragmentManager fm = getSupportFragmentManager();
+        //Toast.makeText(this, "Compose clicked", Toast.LENGTH_LONG).show();
+        FragmentManager fm = getFragmentManager();
         composeTweetDialogFragment = ComposeTweetDialogFragment.newInstance("Filter");
+        composeTweetDialogFragment.setTargetFragment(this,20);
         composeTweetDialogFragment.show(fm, "fragment_alert");
     }
 
     @Override
     public void onFinishComposeTweetDialog(Bundle bundle) {
-        Log.i("SAMY", "came back");
         if (bundle != null) {
             Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
             tweets.add(0, postedTweet);
             tweetAdapter.notifyDataSetChanged();
             Log.i("SAMY", "added to adapter " + postedTweet.getBody());
             rvTweets.scrollToPosition(0);
-            //Log.d("DEBUG", "USER="+mUser.getProfileImageUrl());
         }
     }
 }
