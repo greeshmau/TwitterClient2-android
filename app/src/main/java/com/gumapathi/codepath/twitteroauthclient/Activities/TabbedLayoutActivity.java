@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.gumapathi.codepath.twitteroauthclient.Adapters.MyFragmentPagerAdapter;
-import com.gumapathi.codepath.twitteroauthclient.Fragments.ComposeTweetDialogFragment;
 import com.gumapathi.codepath.twitteroauthclient.R;
 import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;

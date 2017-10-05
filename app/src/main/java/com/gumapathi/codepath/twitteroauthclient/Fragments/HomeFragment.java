@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.gumapathi.codepath.twitteroauthclient.Adapters.TweetAdapter;
 import com.gumapathi.codepath.twitteroauthclient.Helpers.EndlessRecyclerViewScrollListener;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet_Table;
@@ -22,14 +21,9 @@ import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import cz.msebera.android.httpclient.Header;
 
 import static com.gumapathi.codepath.twitteroauthclient.TwitterClient.TWEET_COUNT;
@@ -40,10 +34,7 @@ import static com.gumapathi.codepath.twitteroauthclient.Utils.Utils.checkForInte
  */
 
 public class HomeFragment extends Fragment implements ComposeTweetDialogFragment.ComposeTweetDialogListener{
-    TweetAdapter tweetAdapter;
-    ArrayList<Tweet> tweets;
-    RecyclerView rvTweets;
-    EndlessRecyclerViewScrollListener scrollListener;
+
     boolean startOfOldTweets = false;
     boolean endOfOldTweets = false;
     private TwitterClient client;
@@ -51,8 +42,8 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
     boolean noNewTweets = true;
     public static final String ARG_PAGE = "ARG_PAGE";
     ComposeTweetDialogFragment composeTweetDialogFragment;
-
-
+    EndlessRecyclerViewScrollListener scrollListener;
+    TweetsDisplayFragment tweetsDisplayFragment;
     public static HomeFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -71,13 +62,6 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
         client = TwitterApplication.getRestClient();
-        if (savedInstanceState != null) {
-            Tweet postedTweet = (Tweet) Parcels.unwrap(savedInstanceState.getParcelable("PostedTweet"));
-            tweets.add(0, postedTweet);
-            tweetAdapter.notifyDataSetChanged();
-            Log.i("SAMY", "added to adapter " + postedTweet.getBody());
-            rvTweets.scrollToPosition(0);
-        }
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -103,20 +87,8 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
                 composeNewTweet(v);
             }
         });
-        rvTweets = (RecyclerView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.rvTweet);
-        tweets = new ArrayList<>();
-        tweetAdapter = new TweetAdapter(tweets);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
-        rvTweets.setLayoutManager(linearLayoutManager);
-        rvTweets.setAdapter(tweetAdapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                populateTimeline(page, false);
-            }
-        };
-        rvTweets.addOnScrollListener(scrollListener);
+        tweetsDisplayFragment = getFragmentManager().findFragmentById(R.id.f);
         populateTimeline(0, false);
 
         return view;
@@ -157,30 +129,14 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
                         //SQLite.delete(Tweet.class).async().execute();
                         //SQLite.delete(User.class).async().execute();
                         cleared = true;
-                        tweets.clear();
-                        tweetAdapter.notifyDataSetChanged();
+                        tweetsDisplayFragment.clearItems();
                     }
                     if (response.length() < TWEET_COUNT) {
                         Log.i("SAMY", "setting startOfOldTweets to true ");
                         startOfOldTweets = true;
                     }
-
-                    try {
-                        List<Tweet> newTweets = Tweet.fromJSONArray(response);
-                        Log.i("SAMY", "setting all tweets initial" + String.valueOf(newTweets.size()));
-                        if(newTweets.size() > 0) noNewTweets = false;
-
-                        if(refreshing) {
-                            tweets.addAll(0,newTweets);
-                            tweetAdapter.notifyDataSetChanged();
-                        }
-                        else {
-                            tweets.addAll(newTweets);
-                            tweetAdapter.notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    tweetsDisplayFragment.addAllItems(true,response);
+                    if(response.length() > 0) noNewTweets = false;
                     Log.i("SAMY-eof-endOfOldTweets",String.valueOf(endOfOldTweets));
                     Log.i("SAMY-eof-noNewTweets",String.valueOf(noNewTweets));
                 }
@@ -209,8 +165,9 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
         }
         if (!endOfOldTweets || !isOnline || noNewTweets) {
             Log.i("SAMY", "old tweets " + String.valueOf(startOfOldTweets) + " page - " + String.valueOf(page));
-            tweets.addAll(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
-            tweetAdapter.notifyDataSetChanged();
+            tweetsDisplayFragment.addAllItems(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
+            /*tweets.addAll(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
+            tweetAdapter.notifyDataSetChanged();*/
             endOfOldTweets = true;
         }
         if(endOfOldTweets && isOnline ){
@@ -223,14 +180,7 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     Log.i("SAMY-maxid-", response.toString());
-                    try {
-                        List<Tweet> newTweets = Tweet.fromJSONArray(response);
-                        Log.i("SAMY", "setting all tweets " + String.valueOf(newTweets.size()));
-                        tweets.addAll(newTweets);
-                        tweetAdapter.notifyDataSetChanged();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    tweetsDisplayFragment.addAllItems(false,response);
                 }
 
                 @Override
@@ -268,10 +218,7 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
     public void onFinishComposeTweetDialog(Bundle bundle) {
         if (bundle != null) {
             Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
-            tweets.add(0, postedTweet);
-            tweetAdapter.notifyDataSetChanged();
-            Log.i("SAMY", "added to adapter " + postedTweet.getBody());
-            rvTweets.scrollToPosition(0);
+            tweetsDisplayFragment.addSingleTweetToTop(postedTweet);
         }
     }
 }
