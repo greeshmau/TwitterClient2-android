@@ -33,7 +33,6 @@
                     android:scheme="@string/intent_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.TimelineActivity" />
         <activity android:name=".Activities.TabbedLayoutActivity" />
         <activity
             android:name=".Activities.SplashScreenActivity"
@@ -42,9 +41,11 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.ProfileActivity"></activity>
     </application>
 
 </manifest>

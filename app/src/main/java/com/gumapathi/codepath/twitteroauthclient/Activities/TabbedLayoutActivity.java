@@ -1,9 +1,11 @@
 package com.gumapathi.codepath.twitteroauthclient.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -31,7 +33,6 @@ public class TabbedLayoutActivity extends AppCompatActivity  {
     ImageView ivProfilePhoto;
     private TwitterClient client;
     ViewPager viewPager;
-    ComposeTweetDialogFragment composeTweetDialogFragment;
 
 
     @Override
@@ -67,7 +68,13 @@ public class TabbedLayoutActivity extends AppCompatActivity  {
                             .load(profileImageUrl)
                             .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(), 60, 0))
                             .into(ivProfilePhoto);
-
+                    ivProfilePhoto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
+                            startActivity(profileIntent);
+                        }
+                    });
 
                 } catch (JSONException e) {
                     e.printStackTrace();
