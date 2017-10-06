@@ -1,9 +1,8 @@
 package com.gumapathi.codepath.twitteroauthclient.Fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,12 +20,14 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TweetsDisplayFragment extends Fragment {
+public abstract class TweetsDisplayFragment extends Fragment {
 
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
     EndlessRecyclerViewScrollListener scrollListener;
+    private SwipeRefreshLayout swipeContainer;
+
 
     public TweetsDisplayFragment() {
         // Required empty public constructor
@@ -55,10 +56,28 @@ public class TweetsDisplayFragment extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                //populateTimeline(page, false);
+                populateTimeline(page, false);
             }
         };
         rvTweets.addOnScrollListener(scrollListener);
+
+        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.refreshing
+                populateTimeline(0, true);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         return v;
     }
 
@@ -99,5 +118,13 @@ public class TweetsDisplayFragment extends Fragment {
         tweets.clear();
         tweetAdapter.notifyDataSetChanged();
     }
+
+    protected void onFinishLoadMore(){
+        //ldProgress.setVisibility(View.GONE);
+        //rvTweets.setVisibility(View.VISIBLE);
+        swipeContainer.setRefreshing(false);
+    }
+
+    abstract void populateTimeline(int page, boolean refreshing);
 
 }

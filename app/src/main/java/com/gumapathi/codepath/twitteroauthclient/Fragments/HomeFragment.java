@@ -2,18 +2,13 @@ package com.gumapathi.codepath.twitteroauthclient.Fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.gumapathi.codepath.twitteroauthclient.Helpers.EndlessRecyclerViewScrollListener;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet_Table;
 import com.gumapathi.codepath.twitteroauthclient.R;
@@ -21,9 +16,11 @@ import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.parceler.Parcels;
+
 import cz.msebera.android.httpclient.Header;
 
 import static com.gumapathi.codepath.twitteroauthclient.TwitterClient.TWEET_COUNT;
@@ -33,17 +30,15 @@ import static com.gumapathi.codepath.twitteroauthclient.Utils.Utils.checkForInte
  * Created by gumapathi on 10/1/17.
  */
 
-public class HomeFragment extends Fragment implements ComposeTweetDialogFragment.ComposeTweetDialogListener{
+public class HomeFragment extends TweetsDisplayFragment implements ComposeTweetDialogFragment.ComposeTweetDialogListener{
 
     boolean startOfOldTweets = false;
     boolean endOfOldTweets = false;
     private TwitterClient client;
-    private SwipeRefreshLayout swipeContainer;
     boolean noNewTweets = true;
     public static final String ARG_PAGE = "ARG_PAGE";
     ComposeTweetDialogFragment composeTweetDialogFragment;
-    EndlessRecyclerViewScrollListener scrollListener;
-    TweetsDisplayFragment tweetsDisplayFragment;
+
     public static HomeFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -63,22 +58,7 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
         client = TwitterApplication.getRestClient();
         // Lookup the swipe container view
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.refreshing
-                populateTimeline(0, true);
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+
 
         FloatingActionButton fabCompose = (FloatingActionButton) view.findViewById(R.id.fabCompose);
         fabCompose.setOnClickListener(new View.OnClickListener() {
@@ -88,13 +68,12 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
             }
         });
 
-        tweetsDisplayFragment = getFragmentManager().findFragmentById(R.id.f);
         populateTimeline(0, false);
 
         return view;
     }
 
-    private void populateTimeline(final int page, final boolean refreshing) {
+    public void populateTimeline(final int page, final boolean refreshing) {
         Log.i("SAMY-", "poptime");
         long storedSinceID = 1;
         long storedMaxId = 0;
@@ -129,13 +108,13 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
                         //SQLite.delete(Tweet.class).async().execute();
                         //SQLite.delete(User.class).async().execute();
                         cleared = true;
-                        tweetsDisplayFragment.clearItems();
+                        clearItems();
                     }
                     if (response.length() < TWEET_COUNT) {
                         Log.i("SAMY", "setting startOfOldTweets to true ");
                         startOfOldTweets = true;
                     }
-                    tweetsDisplayFragment.addAllItems(true,response);
+                    addAllItems(true,response);
                     if(response.length() > 0) noNewTweets = false;
                     Log.i("SAMY-eof-endOfOldTweets",String.valueOf(endOfOldTweets));
                     Log.i("SAMY-eof-noNewTweets",String.valueOf(noNewTweets));
@@ -165,7 +144,7 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
         }
         if (!endOfOldTweets || !isOnline || noNewTweets) {
             Log.i("SAMY", "old tweets " + String.valueOf(startOfOldTweets) + " page - " + String.valueOf(page));
-            tweetsDisplayFragment.addAllItems(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
+            addAllItems(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
             /*tweets.addAll(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
             tweetAdapter.notifyDataSetChanged();*/
             endOfOldTweets = true;
@@ -180,7 +159,7 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     Log.i("SAMY-maxid-", response.toString());
-                    tweetsDisplayFragment.addAllItems(false,response);
+                    addAllItems(false,response);
                 }
 
                 @Override
@@ -202,7 +181,7 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
                 }
             });
         }
-        swipeContainer.setRefreshing(false);
+        onFinishLoadMore();
     }
 
 
@@ -218,7 +197,7 @@ public class HomeFragment extends Fragment implements ComposeTweetDialogFragment
     public void onFinishComposeTweetDialog(Bundle bundle) {
         if (bundle != null) {
             Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
-            tweetsDisplayFragment.addSingleTweetToTop(postedTweet);
+            addSingleTweetToTop(postedTweet);
         }
     }
 }
