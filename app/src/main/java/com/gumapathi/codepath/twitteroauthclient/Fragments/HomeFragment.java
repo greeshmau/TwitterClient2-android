@@ -50,28 +50,20 @@ public class HomeFragment extends TweetsDisplayFragment implements ComposeTweetD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        client = TwitterApplication.getRestClient();
     }
 
-    @Override
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
-        client = TwitterApplication.getRestClient();
-        // Lookup the swipe container view
+        Log.i("SAMY-", "inflated view fragment");
 
-
-        FloatingActionButton fabCompose = (FloatingActionButton) view.findViewById(R.id.fabCompose);
-        fabCompose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                composeNewTweet(v);
-            }
-        });
 
         populateTimeline(0, false);
 
         return view;
-    }
+    }*/
 
     public void populateTimeline(final int page, final boolean refreshing) {
         Log.i("SAMY-", "poptime");

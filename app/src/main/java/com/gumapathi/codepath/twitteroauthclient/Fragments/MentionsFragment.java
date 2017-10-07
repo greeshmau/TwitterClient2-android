@@ -2,11 +2,8 @@ package com.gumapathi.codepath.twitteroauthclient.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
-import com.gumapathi.codepath.twitteroauthclient.R;
+
 import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -19,18 +16,19 @@ import cz.msebera.android.httpclient.Header;
 import static com.gumapathi.codepath.twitteroauthclient.Utils.Utils.checkForInternet;
 
 /**
- * Created by gumapathi on 10/1/17.
+ * Created by gumapathi on 10/6/2017.
  */
 
-public class FavoriteFragment extends TweetsDisplayFragment {
+public class MentionsFragment extends TweetsDisplayFragment {
 
+    boolean startOfOldTweets = false;
     private TwitterClient client;
     public static final String ARG_PAGE = "ARG_PAGE";
-    String screenName;
-    public static FavoriteFragment newInstance(int page) {
+
+    public static MentionsFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        FavoriteFragment fragment = new FavoriteFragment();
+        MentionsFragment fragment = new MentionsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,9 +36,6 @@ public class FavoriteFragment extends TweetsDisplayFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        this.screenName = args.getString("screenName");
-        Log.i("SAMY-bun", screenName);
         client = TwitterApplication.getRestClient();
 
     }
@@ -58,7 +53,9 @@ public class FavoriteFragment extends TweetsDisplayFragment {
         if (!isOnline) {
             Toast.makeText(this.getContext(), "App is offline, cannot show favorite tweets", Toast.LENGTH_LONG).show();
         } else {
-            client.getUsersFavorites(screenName,new JsonHttpResponseHandler() {
+            client.getMentionsTimeline(new JsonHttpResponseHandler() {
+                boolean cleared = false;
+
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.i("SAMY-", response.toString());
@@ -82,18 +79,21 @@ public class FavoriteFragment extends TweetsDisplayFragment {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     Log.i("SAMY-", responseString);
+                    startOfOldTweets = true;
                     throwable.printStackTrace();
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                     Log.i("SAMY-", errorResponse.toString());
+                    startOfOldTweets = true;
                     throwable.printStackTrace();
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     Log.i("SAMY-", errorResponse.toString());
+                    startOfOldTweets = true;
                     throwable.printStackTrace();
                 }
             });

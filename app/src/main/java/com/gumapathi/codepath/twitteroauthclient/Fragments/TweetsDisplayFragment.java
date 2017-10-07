@@ -45,6 +45,8 @@ public abstract class TweetsDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.i("SAMY", "TweetsListFragment onCreateView");
+
         View v = inflater.inflate(R.layout.fragment_tweets_list, container, false);
         rvTweets = (RecyclerView) v.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.rvTweet);
         tweets = new ArrayList<>();
@@ -77,7 +79,7 @@ public abstract class TweetsDisplayFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
+        populateTimeline(0, false);
         return v;
     }
 
@@ -85,24 +87,24 @@ public abstract class TweetsDisplayFragment extends Fragment {
         try {
             List<Tweet> newTweets = Tweet.fromJSONArray(response);
             Log.i("SAMY", "setting all tweets " + String.valueOf(newTweets.size()));
-            if(refreshing) {
-                tweets.addAll(0,newTweets);
-            }
-            else {
+            if (refreshing) {
+                tweets.addAll(0, newTweets);
+            } else {
                 tweets.addAll(newTweets);
             }
             tweetAdapter.notifyDataSetChanged();
         } catch (Exception e) {
+            Log.i("SAMY", "setting all tweets exception" + e.getMessage());
             e.printStackTrace();
         }
     }
 
     public void addAllItems(List<Tweet> tweets) {
         try {
-                tweets.addAll(tweets);
-
+            tweets.addAll(tweets);
             tweetAdapter.notifyDataSetChanged();
         } catch (Exception e) {
+            Log.i("SAMY", "1setting all tweets exception" + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -119,7 +121,7 @@ public abstract class TweetsDisplayFragment extends Fragment {
         tweetAdapter.notifyDataSetChanged();
     }
 
-    protected void onFinishLoadMore(){
+    protected void onFinishLoadMore() {
         //ldProgress.setVisibility(View.GONE);
         //rvTweets.setVisibility(View.VISIBLE);
         swipeContainer.setRefreshing(false);

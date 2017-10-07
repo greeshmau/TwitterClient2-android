@@ -1,6 +1,7 @@
 package com.gumapathi.codepath.twitteroauthclient.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.gumapathi.codepath.twitteroauthclient.Activities.ProfileActivity;
 import com.gumapathi.codepath.twitteroauthclient.Decorators.LinkifiedTextView;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.R;
@@ -182,14 +184,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
 
         public LinkifiedTextView tvBody;
 
-        public ImageView ivProfileImage;
+        public ImageButton ivProfileImage;
         public ImageView ivPhoto;
         public ImageButton ivLike;
         public ImageView ivRetweet;
 
         public TweetViewHolder(View view) {
             super(view);
-            ivProfileImage = (ImageView)view.findViewById((com.gumapathi.codepath.twitteroauthclient.R.id.ivProfileImage));
+            ivProfileImage = (ImageButton)view.findViewById((com.gumapathi.codepath.twitteroauthclient.R.id.ivProfileImage));
             tvUsername = (TextView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.tvUserName);
             tvBody = (LinkifiedTextView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.tvBody);
             tvTime = (TextView) view.findViewById(R.id.tvTime);
@@ -235,6 +237,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
                     });
                     ivLike.setImageResource(R.drawable.like_on);
                     Toast.makeText(v.getContext(), "Favorited the tweet", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Tweet tweet = allTweets.get(getAdapterPosition());
+                    Intent intent = new Intent(v.getContext(), ProfileActivity.class);
+                    intent.putExtra("screen_name",tweet.getUser().getScreenName());
+                    v.getContext().startActivity(intent);
                 }
             });
         }

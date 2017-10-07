@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.gumapathi.codepath.twitteroauthclient.Adapters.MyFragmentPagerAdapter;
+import com.gumapathi.codepath.twitteroauthclient.Adapters.TimelineFragmentPagerAdapter;
 import com.gumapathi.codepath.twitteroauthclient.R;
 import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
@@ -39,20 +40,24 @@ public class TabbedLayoutActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_layout);
         client = TwitterApplication.getRestClient();
+        Log.i("SAMY-", "inflated view activity");
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(),
+        viewPager.setAdapter(new TimelineFragmentPagerAdapter(getSupportFragmentManager(),
                 TabbedLayoutActivity.this));
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+        Log.i("SAMY-", "set up view page");
 
         for (int i = 0; i < imageResId.length; i++) {
             tabLayout.getTabAt(i).setIcon(imageResId[i]);
         }
         setupProfileImage();
+        Log.i("SAMY-", "set up profile image");
+
 
     }
 
@@ -67,10 +72,12 @@ public class TabbedLayoutActivity extends AppCompatActivity  {
                             .load(profileImageUrl)
                             .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(), 60, 0))
                             .into(ivProfilePhoto);
+                    final String screenName = response.getString("screen_name");
                     ivProfilePhoto.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
+                            profileIntent.putExtra("screen_name",screenName);
                             startActivity(profileIntent);
                         }
                     });

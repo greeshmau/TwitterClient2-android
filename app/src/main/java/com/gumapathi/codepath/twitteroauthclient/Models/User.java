@@ -29,6 +29,15 @@ public class User extends BaseModel{
     @Column
     String profileImageURL;
 
+    @Column
+    String headerImageURL;
+
+    @Column
+    int followingCount;
+
+    @Column
+    int followersCount;
+
     public User() {
     }
 
@@ -64,6 +73,30 @@ public class User extends BaseModel{
         this.profileImageURL = profileImageURL;
     }
 
+    public String getHeaderImageURL() {
+        return headerImageURL;
+    }
+
+    public void setHeaderImageURL(String headerImageURL) {
+        this.headerImageURL = headerImageURL;
+    }
+
+    public int getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(int followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
+    }
+
     public static User fromJSONWithDBSave(JSONObject json) throws JSONException {
         User user = new User();
 
@@ -71,6 +104,14 @@ public class User extends BaseModel{
         user.uid = json.getLong("id");
         user.screenName = json.getString("screen_name");
         user.profileImageURL = json.getString("profile_image_url");
+        if(json.has("profile_banner_url")) {
+            user.headerImageURL = json.getString("profile_banner_url");
+        }
+        else {
+            user.headerImageURL = "";
+        }
+        user.followersCount = json.getInt("followers_count");
+        user.followingCount = json.getInt("friends_count");
         user.save();
         return user;
     }
