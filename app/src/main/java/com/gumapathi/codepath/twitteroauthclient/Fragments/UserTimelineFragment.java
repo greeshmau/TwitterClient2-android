@@ -31,6 +31,7 @@ public class UserTimelineFragment extends TweetsDisplayFragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     String screenName;
 
+
     public static UserTimelineFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -65,7 +66,7 @@ public class UserTimelineFragment extends TweetsDisplayFragment {
         if (!isOnline) {
             Toast.makeText(this.getContext(), "App is offline, cannot show favorite tweets", Toast.LENGTH_LONG).show();
         } else {
-            client.getUserTimeline(screenName,new JsonHttpResponseHandler() {
+            client.getUserTimeline(0, screenName,new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.i("SAMY-", response.toString());

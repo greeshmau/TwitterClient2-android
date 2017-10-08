@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gumapathi.codepath.twitteroauthclient.Activities.TabbedLayoutActivity;
 import com.gumapathi.codepath.twitteroauthclient.Models.DirectMessage;
 import com.gumapathi.codepath.twitteroauthclient.Models.User;
@@ -91,9 +92,9 @@ public class DirectMessageAdapter extends RecyclerView.Adapter<DirectMessageAdap
 //                getContext().startActivity(intent);
 //            }
 //        });
-        Picasso.with(getContext())
+        Glide.with(getContext())
                 .load(otherUser.getProfileImageURL())
-                //.transform(new RoundedCornersTransformation(15, 0))
+                .bitmapTransform(new RoundedCornersTransformation(getContext(), 60, 0))
                 .into(ivProfileImg);
     }
 

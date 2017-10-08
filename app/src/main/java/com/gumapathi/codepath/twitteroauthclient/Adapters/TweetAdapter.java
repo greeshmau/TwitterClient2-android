@@ -67,18 +67,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
         Tweet thisTweet = allTweets.get(position);
 
         viewHolder.tvUsername.setText(thisTweet.getUser().getName());
-        viewHolder.tvScreenName.setText("@" + thisTweet.getUser().getScreenName());
+        viewHolder.tvScreenName.setText(thisTweet.getUser().getScreenName());
         viewHolder.tvBody.setText(thisTweet.getBody());
         viewHolder.tvRetweetCount.setText("");
         viewHolder.tvLikeCount.setText("");
 
         ImageView ivRetweet = viewHolder.ivRetweet;
-        ImageButton ivLike = viewHolder.ivLike;
+        ImageView ivLike = viewHolder.ivLike;
 
         if (thisTweet.getRetweetCount() > 0) {
             ivRetweet.setImageResource(0);
             viewHolder.tvRetweetCount.setText(String.valueOf(thisTweet.getRetweetCount()));
-            ivRetweet.setImageResource(R.drawable.retweet_off);
+            ivRetweet.setImageResource(R.drawable.rt_off);
         }
         if (thisTweet.getFavouritesCount() > 0) {
             ivLike.setImageResource(0);
@@ -127,7 +127,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
             ivLike.setImageResource(R.drawable.like_on);
         }
         else {
-            ivLike.setImageResource(R.drawable.like_off);
+            ivLike.setImageResource(R.drawable.heart);
         }
 
         Glide.with(ivProfileImage.getContext())
@@ -185,7 +185,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
 
         public ImageView ivProfileImage;
         public ImageView ivPhoto;
-        public ImageButton ivLike;
+        public ImageView ivLike;
         public ImageView ivRetweet;
 
         public TweetViewHolder(View view) {
@@ -199,7 +199,45 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
             tvRetweetCount = (TextView) view.findViewById(R.id.tvRetweetCount);
             ivPhoto = (ImageView) view.findViewById(R.id.ivPhoto);
             ivRetweet = (ImageView) view.findViewById(R.id.ivRetweet);
-            ivLike = (ImageButton) view.findViewById(R.id.ivLike);
+            ivLike = (ImageView) view.findViewById(R.id.ivLike);
+
+            ivRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Tweet tweet = allTweets.get(getAdapterPosition());
+                    TwitterClient client = TwitterApplication.getRestClient();
+                    client.reTweet(new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.i("SAMY-", response.toString());
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.i("SAMY-", responseString);
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            Log.i("SAMY-", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.i("SAMY-", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+                    },tweet.isRetweeted(),tweet.getUid());
+                    ivLike.setImageResource(R.drawable.rt_on);
+                    Toast.makeText(v.getContext(), "retweeted the tweet", Toast.LENGTH_LONG).show();
+                }
+            });
 
             ivLike.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.bumptech.glide.Glide;
 import com.gumapathi.codepath.twitteroauthclient.Adapters.ProfileFragmentPagerAdapter;
 import com.gumapathi.codepath.twitteroauthclient.Models.User;
 import com.gumapathi.codepath.twitteroauthclient.R;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -144,14 +146,14 @@ public class ProfileActivity extends AppCompatActivity {
         Log.i("SAMY-getProfileImageU", followers);
         Log.i("SAMY-getHeaderImageURL", following);
 
-        Picasso.with(getApplicationContext())
+        Glide.with(getApplicationContext())
                 .load(user.getProfileImageURL())
-                //.transform(new RoundedCornersTransformation(30, 0, RoundedCornersTransformation.CornerType.ALL))
+                .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(), 30, 0, RoundedCornersTransformation.CornerType.ALL))
                 .into(ivProfilePic);
         if(!user.getHeaderImageURL().isEmpty()) {
-            Picasso.with(getApplicationContext())
+            Glide.with(getApplicationContext())
                     .load(user.getHeaderImageURL())
-                    //.transform(new RoundedCornersTransformation(30, 0, RoundedCornersTransformation.CornerType.ALL))
+                    .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(),30, 0, RoundedCornersTransformation.CornerType.ALL))
                     .into(ivHeaderPic);
         }
     }

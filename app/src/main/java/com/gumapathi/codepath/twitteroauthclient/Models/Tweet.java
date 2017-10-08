@@ -139,11 +139,17 @@ public class Tweet extends BaseModel{
         else {
             tweet.mediaUrl = "";
         }
-        if(json.getBoolean("favorited")) {
+        if(json.getBoolean("favorited")==true) {
             tweet.favorited = true;
         }
         else{
             tweet.favorited = false;
+        }
+        if(json.getBoolean("retweeted")==true) {
+            tweet.retweeted = true;
+        }
+        else{
+            tweet.retweeted = false;
         }
         if(json.has("retweet_count")) {
             tweet.retweetCount = Integer.parseInt(json.getString("retweet_count"));

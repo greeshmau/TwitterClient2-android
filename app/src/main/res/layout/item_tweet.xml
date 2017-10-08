@@ -29,11 +29,25 @@
         android:textSize="18dp"
         android:textStyle="bold"
         tools:text="MyName" />
+    <TextView
+        android:id="@+id/tvScreenName"
+        fontPath="fonts/roboto_light.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvUserName"
+        android:layout_alignBottom="@id/tvUserName"
+        android:textAlignment="center"
+        android:layout_toEndOf="@+id/tvUserName"
+        android:layout_toRightOf="@+id/tvUserName"
+        android:textSize="14dp"
 
-    <!--<com.gumapathi.codepath.twitteroauthclient.Decorators.Linkified--->
+        android:paddingLeft="5dp"
+        android:text="@string/screenname"
+        android:textColor="#AAB8C2" />
+
     <TextView
         android:id="@+id/tvBody"
-        fontPath="fonts/roboto_thin.ttf"
+        fontPath="fonts/roboto_medium.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -59,18 +73,6 @@
         android:textColor="#AAB8C2"
         tools:text="1d" />
 
-    <TextView
-        android:id="@+id/tvScreenName"
-        fontPath="fonts/roboto_light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvUserName"
-        android:layout_alignBottom="@id/tvUserName"
-        android:layout_toEndOf="@+id/tvUserName"
-        android:layout_toRightOf="@+id/tvUserName"
-        android:paddingLeft="5dp"
-        android:text="@string/screenname"
-        android:textColor="#AAB8C2" />
 
     <ImageView
         android:id="@+id/ivPhoto"
@@ -102,14 +104,14 @@
             android:layout_height="18dp"
             android:layout_gravity="left"
             android:layout_weight=".33"
-            android:src="@drawable/reply" />
+            android:src="@drawable/chat_off" />
 
         <ImageView
             android:id="@+id/ivRetweet"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_weight=".12"
-            android:src="@drawable/retweet_off" />
+            android:src="@drawable/rt_off" />
 
         <TextView
             android:id="@+id/tvRetweetCount"
@@ -119,12 +121,12 @@
             android:layout_weight=".21"
             android:text="" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/ivLike"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_weight=".12"
-            android:background="@android:color/transparent" />
+            android:src="@drawable/heart"/>
 
         <TextView
             android:id="@+id/tvLikeCount"

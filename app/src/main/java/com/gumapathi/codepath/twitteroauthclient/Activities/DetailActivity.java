@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gumapathi.codepath.twitteroauthclient.Decorators.LinkifiedTextView;
+import com.bumptech.glide.Glide;
 import com.gumapathi.codepath.twitteroauthclient.Fragments.ReplyTweetFragment;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.Models.User;
@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DetailActivity extends AppCompatActivity {
@@ -47,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.tvScreenName)
     TextView tvScreenName;
     @BindView(R.id.tvBody)
-    LinkifiedTextView tvBody;
+    TextView tvBody;
     @BindView(R.id.ivPhoto)
     ImageView ivPhoto;
     @BindView(R.id.tvTime)
@@ -124,16 +125,23 @@ public class DetailActivity extends AppCompatActivity {
         catch (ParseException e) {
             Log.i("SAMY-dtParsEx ", e.getMessage());
             e.printStackTrace();
-        }        Picasso.with(this)
-                .load(user.getHeaderImageURL())
-                //.transform(new RoundedCornersTransformation(15, 0))
-                .into(ivProfileImg);
+        }
+        if(!user.getProfileImageURL().isEmpty()) {
+
+            Glide.with(this)
+                    .load(user.getProfileImageURL())
+                    .bitmapTransform(new RoundedCornersTransformation(this,15, 0))
+                    .into(ivProfileImg);
+        }
+        else {
+            ivProfileImg.setImageResource(0);
+        }
         ivPhoto.setImageResource(0);
         if (!tweet.getMediaUrl().isEmpty()) {
 
-            Picasso.with(this)
+            Glide.with(this)
                     .load(tweet.getMediaUrl())
-                    //.transform(new RoundedCornersTransformation(15, 0))
+                    .bitmapTransform(new RoundedCornersTransformation(this,15, 0))
                     .into(ivPhoto);
         }
         tvRetweetCount.setText("");
@@ -202,7 +210,7 @@ public class DetailActivity extends AppCompatActivity {
         client.favorTweet(new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", "favorited" + response.toString());
+                Log.d("SAMY-fav", "favorited" + response.toString());
                 try {
                     if(response.getBoolean("favorited")){
                         tweet.setFavouritesCount(Integer.parseInt(response.getString("favorite_count")));
@@ -226,12 +234,12 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("DEBUG", responseString.toString() );
+                Log.d("SAMY-favex", responseString.toString() );
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
+                Log.d("SAMY-favex", errorResponse.toString());
 
             }
         }, tweet.isFavorited(), tweet.getUid());
@@ -243,7 +251,7 @@ public class DetailActivity extends AppCompatActivity {
         client.reTweet(new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", "retweeted" + response.toString());
+                Log.d("SAMY-rt", "retweeted" + response.toString());
                 try {
                     if(response.getBoolean("retweeted")){
                         tweet.setRetweetCount(Integer.parseInt(response.getString("retweet_count")));
@@ -264,13 +272,13 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("DEBUG", responseString.toString() );
+                Log.d("SAMYrt-ex", responseString.toString() );
 
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString() );
+                Log.d("SAMY-rtex", errorResponse.toString() );
 
             }
         }, tweet.isRetweeted(), tweet.getUid());

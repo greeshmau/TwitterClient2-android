@@ -55,7 +55,6 @@
             android:textColor="#AAB8C2"
             android:textSize="14sp" />
 
-        <!--<com.codepath.apps.chirrup.decorators.LinkifiedTextView-->
         <TextView
             android:id="@+id/tvBody"
             fontPath="fonts/roboto_thin.ttf"

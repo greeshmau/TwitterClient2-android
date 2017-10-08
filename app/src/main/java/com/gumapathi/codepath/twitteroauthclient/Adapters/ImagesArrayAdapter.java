@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.R;
 import com.squareup.picasso.Picasso;
@@ -14,7 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * Created by santoshag on 10/7/17.
+ * Created by gumapathi on 10/7/17.
  */
 
 public class ImagesArrayAdapter extends ArrayAdapter<Tweet> {
@@ -32,7 +33,7 @@ public class ImagesArrayAdapter extends ArrayAdapter<Tweet> {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_image, parent, false);
         ImageView ivImage = (ImageView)convertView.findViewById(R.id.ivImage);
         if(!tweet.getMediaUrl().isEmpty()) {
-        Picasso.with(getContext())
+        Glide.with(getContext())
                 .load(tweet.getMediaUrl())
                 //.placeholder(R.drawable.loading)
                 //.error(R.drawable.image_unavailable)

@@ -85,32 +85,32 @@ public class MediaFragment extends Fragment {
 
     public void populatePhotos(long max_id) {
 
-        client.getUserTimeline(screenName, handler);
+        client.getUserTimeline(max_id,screenName, handler);
     }
 
     JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-            ArrayList<Tweet> tweetArrayList = new ArrayList<>();
+            ArrayList<Tweet> tweets = new ArrayList<>();
             try {
-                tweetArrayList = (ArrayList<Tweet>) Tweet.fromJSONArray(response);
+                tweets = (ArrayList<Tweet>) Tweet.fromJSONArray(response);
             }
             catch (Exception e) {
                 Log.i("SAMY-ex-phot", e.getMessage());
             }
 
-            if (tweetArrayList.size() > 0) {
-                Tweet mostRecentTweet = tweetArrayList.get(tweetArrayList.size() - 1);
+            if (tweets.size() > 0) {
+                Tweet mostRecentTweet = tweets.get(tweets.size() - 1);
                 maxID = mostRecentTweet.getUid();
             }
 
             ArrayList<Tweet> toRemove = new ArrayList<>();
-            for (Tweet tweet : tweetArrayList) {
+            for (Tweet tweet : tweets) {
                 if (tweet.getMediaUrl() == null)
                     toRemove.add(tweet);
             }
-            tweetArrayList.removeAll(toRemove);
-            imagesArrayAdapter.addAll(tweetArrayList);
+            tweets.removeAll(toRemove);
+            imagesArrayAdapter.addAll(tweets);
         }
 
         @Override

@@ -32,7 +32,7 @@ import butterknife.Unbinder;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by santoshag on 7/31/16.
+ * Created by gumapathi on 10/8/17.
  */
 public class ReplyTweetFragment extends BottomSheetDialogFragment {
 
@@ -70,16 +70,16 @@ public class ReplyTweetFragment extends BottomSheetDialogFragment {
     }
 
     public static ReplyTweetFragment newInstance(Boolean isReply, Tweet tweet, User user) {
-        ReplyTweetFragment f = new ReplyTweetFragment();
+        ReplyTweetFragment fragment = new ReplyTweetFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putBoolean("is_reply", isReply);
         args.putParcelable("user", Parcels.wrap(user));
         args.putParcelable("tweet", Parcels.wrap(tweet));
-        f.setArguments(args);
+        fragment.setArguments(args);
 
-        return f;
+        return fragment;
     }
 
 
@@ -97,13 +97,15 @@ public class ReplyTweetFragment extends BottomSheetDialogFragment {
                 client.composeReTweet(new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        Log.d("DEBUG", "onsuccess" + response.toString());
+                        Log.d("SAMY-rt", "onsuccess" + response.toString());
                         Intent intent = new Intent(getActivity(), TabbedLayoutActivity.class);
                         startActivity(intent);
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.d("SAMY-rt", "fail" + responseString);
+
                         dismiss();
                     }
                 }, etTweetText.getText().toString(), isReply, tweet.getUid());

@@ -35,7 +35,6 @@ public abstract class TweetsDisplayFragment extends Fragment implements ComposeT
     private SwipeRefreshLayout swipeContainer;
     ComposeTweetDialogFragment composeTweetDialogFragment;
 
-
     public TweetsDisplayFragment() {
         // Required empty public constructor
     }
@@ -167,7 +166,7 @@ public abstract class TweetsDisplayFragment extends Fragment implements ComposeT
     public void onFinishComposeTweetDialog(Bundle bundle) {
         if (bundle != null) {
             Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
-            if(getParentFragment().equals(HomeFragment.class)) {
+            if(getParentFragment().getClass().equals(HomeFragment.class)) {
                 addSingleTweetToTop(postedTweet);
             }
         }

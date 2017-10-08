@@ -113,7 +113,7 @@ public class User extends BaseModel{
 
         user.name = json.getString("name");
         user.uid = json.getLong("id");
-        user.screenName = json.getString("screen_name");
+        user.screenName = "@" +json.getString("screen_name");
         user.profileImageURL = json.getString("profile_image_url");
         user.description = json.getString("description");
         if(json.has("profile_banner_url")) {
