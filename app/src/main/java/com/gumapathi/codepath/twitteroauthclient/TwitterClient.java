@@ -6,6 +6,7 @@ import com.codepath.oauth.OAuthBaseClient;
 import com.github.scribejava.apis.TwitterApi;
 import com.github.scribejava.core.builder.api.BaseApi;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /*
@@ -104,10 +105,20 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void getUsersFavorites(String screenName, AsyncHttpResponseHandler  repsonseHandler){
-		String apiUrl = getApiUrl("/favorites/list.json");
+		String apiUrl = getApiUrl("favorites/list.json");
 		//specify the params
 		RequestParams params = new RequestParams();
 		params.put("screen_name", screenName);
 		getClient().get(apiUrl, params, repsonseHandler);
+	}
+
+	public void getDirectMessages(JsonHttpResponseHandler repsonseHandler) {
+		String apiUrl = getApiUrl("direct_messages.json");
+		//specify the params
+		RequestParams params = new RequestParams();
+		params.put("count", 20);
+		params.put("since_id", 1);
+
+		getClient().get(apiUrl, null, repsonseHandler);
 	}
 }

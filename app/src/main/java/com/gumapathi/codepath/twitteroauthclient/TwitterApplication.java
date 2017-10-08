@@ -1,12 +1,14 @@
 package com.gumapathi.codepath.twitteroauthclient;
 
+import android.app.Application;
+import android.content.Context;
+
 import com.facebook.stetho.Stetho;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
-import android.app.Application;
-import android.content.Context;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /*
  * This is the Android application itself and is used to configure various settings
@@ -29,6 +31,10 @@ public class TwitterApplication extends Application {
 		Stetho.initializeWithDefaults(this);
 
 		TwitterApplication.context = this;
+		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+				.setFontAttrId(R.attr.fontPath)
+				.build()
+		);
 	}
 
 	public static TwitterClient getRestClient() {

@@ -184,14 +184,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
 
         public LinkifiedTextView tvBody;
 
-        public ImageButton ivProfileImage;
+        public ImageView ivProfileImage;
         public ImageView ivPhoto;
         public ImageButton ivLike;
         public ImageView ivRetweet;
 
         public TweetViewHolder(View view) {
             super(view);
-            ivProfileImage = (ImageButton)view.findViewById((com.gumapathi.codepath.twitteroauthclient.R.id.ivProfileImage));
+            ivProfileImage = (ImageView)view.findViewById((com.gumapathi.codepath.twitteroauthclient.R.id.ivProfileImage));
             tvUsername = (TextView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.tvUserName);
             tvBody = (LinkifiedTextView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.tvBody);
             tvTime = (TextView) view.findViewById(R.id.tvTime);

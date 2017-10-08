@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp">
 
-    <ImageButton
+    <ImageView
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:id="@+id/ivProfileImage"

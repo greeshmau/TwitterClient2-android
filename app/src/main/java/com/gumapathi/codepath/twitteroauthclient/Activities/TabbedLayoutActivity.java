@@ -2,13 +2,13 @@ package com.gumapathi.codepath.twitteroauthclient.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.bumptech.glide.Glide;
 import com.gumapathi.codepath.twitteroauthclient.Adapters.TimelineFragmentPagerAdapter;
 import com.gumapathi.codepath.twitteroauthclient.R;
@@ -26,14 +26,11 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  * Created by gumapathi on 10/1/17.
  */
 
-public class TabbedLayoutActivity extends AppCompatActivity  {
-    private int[] imageResId = {
-            R.drawable.ic_home_black_24dp,
-            R.drawable.like_black};
+public class TabbedLayoutActivity extends AppCompatActivity {
+    public static String loggedUserScreenName;
     ImageView ivProfilePhoto;
-    private TwitterClient client;
     ViewPager viewPager;
-
+    private TwitterClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +45,17 @@ public class TabbedLayoutActivity extends AppCompatActivity  {
                 TabbedLayoutActivity.this));
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        //TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        //tabLayout.setupWithViewPager(viewPager);
+
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.sliding_tabs);
+        //attach the tab to viewpager
+        tabStrip.setViewPager(viewPager);
         Log.i("SAMY-", "set up view page");
 
-        for (int i = 0; i < imageResId.length; i++) {
+        /*for (int i = 0; i < imageResId.length; i++) {
             tabLayout.getTabAt(i).setIcon(imageResId[i]);
-        }
+        }*/
         setupProfileImage();
         Log.i("SAMY-", "set up profile image");
 
@@ -73,11 +74,12 @@ public class TabbedLayoutActivity extends AppCompatActivity  {
                             .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(), 60, 0))
                             .into(ivProfilePhoto);
                     final String screenName = response.getString("screen_name");
+                    loggedUserScreenName = screenName;
                     ivProfilePhoto.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
-                            profileIntent.putExtra("screen_name",screenName);
+                            profileIntent.putExtra("screen_name", screenName);
                             startActivity(profileIntent);
                         }
                     });

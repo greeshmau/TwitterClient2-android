@@ -1,34 +1,28 @@
 package com.gumapathi.codepath.twitteroauthclient.Activities;
 
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentTransaction;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.gumapathi.codepath.twitteroauthclient.Adapters.ProfileFragmentPagerAdapter;
-import com.gumapathi.codepath.twitteroauthclient.Adapters.TimelineFragmentPagerAdapter;
 import com.gumapathi.codepath.twitteroauthclient.Models.User;
 import com.gumapathi.codepath.twitteroauthclient.R;
 import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -43,14 +37,16 @@ public class ProfileActivity extends AppCompatActivity {
     TextView tvFollowers;
     @BindView(R.id.tvFollowing)
     TextView tvFollowing;
-    @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
+    //@BindView(R.id.collapsing_toolbar)
+    //CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.ivHeaderPic)
     ImageView ivHeaderPic;
     @BindView(R.id.vpProfile)
     ViewPager viewPager;
-    @BindView(R.id.tbLayout)
-    TabLayout tabLayout;
+    //@BindView(R.id.tbLayout)
+    //TabLayout tabLayout;
+    @BindView(R.id.tvDescription)
+    TextView tvDescription;
 
     private User user;
 
@@ -59,9 +55,9 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         client = TwitterApplication.getRestClient();
@@ -76,7 +72,10 @@ public class ProfileActivity extends AppCompatActivity {
         viewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager(), bundle));
 
         // Give the TabLayout the ViewPager
-        tabLayout.setupWithViewPager(viewPager);
+        //tabLayout.setupWithViewPager(viewPager);
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tbLayout);
+        //attach the tab to viewpager
+        tabStrip.setViewPager(viewPager);
         Log.i("SAMY-", "set up view page");
 
     }
@@ -129,28 +128,35 @@ public class ProfileActivity extends AppCompatActivity {
         //ft.replace(R.id.flContainer, fragmentUserTimeline);
         //ft.commit();
 
-        collapsingToolbar.setTitle(user.getName());
+        //collapsingToolbar.setTitle(user.getName());
 
         tvName.setText(user.getName());
         tvScreenName.setText(user.getScreenName());
         tvName.setText(user.getName());
-        //tvDescription.setText(user.getDescription());
+        tvDescription.setText(user.getDescription());
         String followers = "Followers " + String.valueOf(user.getFollowersCount());
         String following = "Following " + String.valueOf(user.getFollowingCount());
         tvFollowers.setText(followers);
         tvFollowing.setText(following);
 
-        Log.i("SAMY-getProfileImageU", user.getFollowersCount() +" " +user.getProfileImageURL());
-        Log.i("SAMY-getHeaderImageURL", user.getFollowingCount() +" " +user.getHeaderImageURL());
+        Log.i("SAMY-getProfileImageU", followers);
+        Log.i("SAMY-getHeaderImageURL", following);
 
         Picasso.with(getApplicationContext())
                 .load(user.getProfileImageURL())
                 //.transform(new RoundedCornersTransformation(30, 0, RoundedCornersTransformation.CornerType.ALL))
                 .into(ivProfilePic);
-        Picasso.with(getApplicationContext())
-                .load(user.getHeaderImageURL())
-                //.transform(new RoundedCornersTransformation(30, 0, RoundedCornersTransformation.CornerType.ALL))
-                .into(ivHeaderPic);
+        if(!user.getHeaderImageURL().isEmpty()) {
+            Picasso.with(getApplicationContext())
+                    .load(user.getHeaderImageURL())
+                    //.transform(new RoundedCornersTransformation(30, 0, RoundedCornersTransformation.CornerType.ALL))
+                    .into(ivHeaderPic);
+        }
     }
 
+    public void onFollowingCountClick(View view) {
+    }
+
+    public void onFollowersCountClick(View view) {
+    }
 }

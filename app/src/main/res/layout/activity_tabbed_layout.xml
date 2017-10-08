@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <android.support.design.widget.AppBarLayout
+    <!--<android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -30,12 +30,23 @@
 
         </android.support.v7.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.AppBarLayout>-->
+    <include layout="@layout/toolbar"></include>
 
-    <android.support.design.widget.TabLayout
+
+    <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/sliding_tabs"
+        android:background="@android:color/white"
+        app:pstsShouldExpand="true"
+        app:pstsTextAllCaps="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        app:pstsDividerColor="@android:color/white"
+        app:pstsIndicatorColor="@color/colorPrimary"
+        app:pstsUnderlineColor="@color/colorPrimary"
+        app:pstsUnderlineHeight="0dp"
+        app:pstsIndicatorHeight="3dp"
+        app:pstsTabPaddingLeftRight="14dp"
         app:tabMode="fixed" />
 
     <android.support.v4.view.ViewPager

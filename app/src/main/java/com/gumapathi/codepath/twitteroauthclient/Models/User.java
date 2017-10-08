@@ -38,6 +38,17 @@ public class User extends BaseModel{
     @Column
     int followersCount;
 
+    @Column
+    String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public User() {
     }
 
@@ -104,6 +115,7 @@ public class User extends BaseModel{
         user.uid = json.getLong("id");
         user.screenName = json.getString("screen_name");
         user.profileImageURL = json.getString("profile_image_url");
+        user.description = json.getString("description");
         if(json.has("profile_banner_url")) {
             user.headerImageURL = json.getString("profile_banner_url");
         }

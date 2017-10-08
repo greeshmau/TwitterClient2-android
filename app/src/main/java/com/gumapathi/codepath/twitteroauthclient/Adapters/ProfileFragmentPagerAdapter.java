@@ -1,6 +1,5 @@
 package com.gumapathi.codepath.twitteroauthclient.Adapters;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -40,7 +39,9 @@ public class ProfileFragmentPagerAdapter extends FragmentPagerAdapter {
                 return userTimelineFragment;
             }
             else if (position == 1) {
-                return new MediaFragment();
+                MediaFragment mediaFragment = new MediaFragment();
+                mediaFragment.setArguments(this.fragmentBundle);
+                return mediaFragment;
             }
             else if (position == 2) {
                 FavoriteFragment favoriteFragment = new FavoriteFragment();
