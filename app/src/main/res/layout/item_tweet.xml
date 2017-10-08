@@ -1,133 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
     <ImageView
+        android:id="@+id/ivProfileImage"
         android:layout_width="54dp"
         android:layout_height="54dp"
-        android:id="@+id/ivProfileImage"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
-        android:src="@drawable/twitter_icon"
+        android:contentDescription="@string/profilepic_label"
         android:paddingRight="5dp"
-        android:contentDescription="@string/profilepic_label" />
+        android:src="@drawable/twitter_icon" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="MyName"
         android:id="@+id/tvUserName"
-        android:textColor="#000000"
-        android:textStyle="bold"
         fontPath="fonts/roboto_medium.ttf"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/ivProfileImage"
-        android:layout_toEndOf="@+id/ivProfileImage" />
-
-    <com.gumapathi.codepath.twitteroauthclient.Decorators.LinkifiedTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="My Tweet"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:textColor="#000000"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        tools:text="MyName" />
+
+    <!--<com.gumapathi.codepath.twitteroauthclient.Decorators.Linkified--->
+    <TextView
         android:id="@+id/tvBody"
-        android:lines="3"
-        android:maxLines="3"
-        fontPath="fonts/roboto_light.ttf"
+        fontPath="fonts/roboto_thin.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/tvUserName"
+        android:layout_toEndOf="@+id/ivProfileImage"
         android:autoLink="all"
+        android:lines="3"
+        android:linksClickable="true"
+        android:maxLines="3"
+        android:paddingRight="3dp"
         android:textColor="#000000"
         android:textColorLink="@color/colorPrimary"
-        android:linksClickable="true"
-        android:paddingRight="3dp"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/ivProfileImage"
-        android:layout_below="@id/tvUserName"/>
+        tools:text="My Tweet" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="1d"
-        android:textColor="#AAB8C2"
-        fontPath="fonts/roboto_light.ttf"
         android:id="@+id/tvTime"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
+        fontPath="fonts/roboto_thin.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/screenname"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textColor="#AAB8C2"
+        tools:text="1d" />
+
+    <TextView
         android:id="@+id/tvScreenName"
         fontPath="fonts/roboto_light.ttf"
-        android:textColor="#AAB8C2"
-        android:layout_alignTop="@+id/tvUserName"
-        android:layout_toRightOf="@+id/tvUserName"
-        android:layout_toEndOf="@+id/tvUserName"
-        android:paddingLeft="5dp"/>
-
-    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvUserName"
+        android:layout_alignBottom="@id/tvUserName"
+        android:layout_toEndOf="@+id/tvUserName"
+        android:layout_toRightOf="@+id/tvUserName"
+        android:paddingLeft="5dp"
+        android:text="@string/screenname"
+        android:textColor="#AAB8C2" />
+
+    <ImageView
         android:id="@+id/ivPhoto"
-        android:paddingTop="10dp"
-        android:scaleType="fitCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:adjustViewBounds="true"
         android:layout_below="@+id/tvBody"
         android:layout_toEndOf="@+id/ivProfileImage"
-        tools:src="@drawable/twitter_icon"/>
+        android:adjustViewBounds="true"
+        android:paddingTop="10dp"
+        android:scaleType="fitCenter"
+        tools:src="@drawable/twitter_icon" />
 
     <LinearLayout
+        android:id="@+id/llTweetHelpers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:orientation="horizontal"
-        android:id="@+id/llTweetHelpers"
-        android:layout_below="@+id/ivPhoto"
-        android:paddingTop="10dp"
-        android:paddingBottom="-5dp"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/ivProfileImage">
+        android:layout_below="@+id/ivPhoto"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:weightSum="1">
+
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
             android:id="@+id/ivReply"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="left"
-            android:src="@drawable/reply"
-            android:layout_weight=".33"/>
+            android:layout_weight=".33"
+            android:src="@drawable/reply" />
+
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
             android:id="@+id/ivRetweet"
-            android:src="@drawable/retweet_off"
-            android:layout_weight=".12"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/tvRetweetCount"
-            android:layout_weight=".21"/>
-        <ImageButton
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:background="@android:color/transparent"
-            android:id="@+id/ivLike"
             android:layout_weight=".12"
-            />
+            android:src="@drawable/retweet_off" />
+
         <TextView
+            android:id="@+id/tvRetweetCount"
+            fontPath="fonts/roboto_thin.ttf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:layout_weight=".21"
+            android:text="" />
+
+        <ImageButton
+            android:id="@+id/ivLike"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_weight=".12"
+            android:background="@android:color/transparent" />
+
+        <TextView
             android:id="@+id/tvLikeCount"
-            android:layout_weight=".21"/>
+            fontPath="fonts/roboto_thin.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".21"
+            android:text="" />
     </LinearLayout>
 
-    <!-- <View
+    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:padding="5dp"
-        android:background="#D3D3D3" /> -->
+        android:layout_below="@id/llTweetHelpers"
+        android:background="#D3D3D3"
+        android:padding="10dp" />
 </RelativeLayout>

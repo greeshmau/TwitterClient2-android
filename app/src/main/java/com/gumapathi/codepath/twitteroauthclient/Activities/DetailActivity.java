@@ -1,10 +1,45 @@
 package com.gumapathi.codepath.twitteroauthclient.Activities;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.gumapathi.codepath.twitteroauthclient.Decorators.LinkifiedTextView;
+import com.gumapathi.codepath.twitteroauthclient.Fragments.ReplyTweetFragment;
+import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
+import com.gumapathi.codepath.twitteroauthclient.Models.User;
+import com.gumapathi.codepath.twitteroauthclient.R;
+import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
+import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.parceler.Parcels;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DetailActivity extends AppCompatActivity {
-   /* @BindView(R.id.toolbar)
-    Toolbar toolbar;
+   @BindView(R.id.toolbar)
+   Toolbar toolbar;
     @BindView(R.id.ivProfileImg)
     ImageView ivProfileImg;
     @BindView(R.id.tvUserName)
@@ -15,8 +50,8 @@ public class DetailActivity extends AppCompatActivity {
     LinkifiedTextView tvBody;
     @BindView(R.id.ivPhoto)
     ImageView ivPhoto;
-    @BindView(R.id.tvTweetTime)
-    TextView tvTweetTime;
+    @BindView(R.id.tvTime)
+    TextView tvTime;
     @BindView(R.id.tvLikeCount)
     TextView tvLikeCount;
     @BindView(R.id.tvRetweetCount)
@@ -32,7 +67,6 @@ public class DetailActivity extends AppCompatActivity {
 
     private Tweet tweet;
     private User user;
-    private Entity entity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,27 +81,60 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
         user = (User) Parcels.unwrap(getIntent().getParcelableExtra("user"));
-        entity = (Entity) Parcels.unwrap(getIntent().getParcelableExtra("entity"));
 
         if (tweet != null) {
             Log.i("Tweetdetail", user.getName());
-            loadViewItems(tweet, user, entity);
+            loadViewItems(tweet, user);
         } else {
             Log.i("Tweetdetail", " tweet is null!");
 
         }
     }
 
-    private void loadViewItems(final Tweet tweet, User user, Entity entity) {
+    private void loadViewItems(final Tweet tweet, User user) {
         tvUserName.setText(user.getName());
         tvScreenName.setText(user.getScreenName());
         tvBody.setText(tweet.getBody());
-        tvTweetTime.setText(tweet.getRelativeDate());
-        Picasso.with(this).load(user.getProfileImageUrl()).transform(new RoundedCornersTransformation(15, 0)).into(ivProfileImg);
-        ivPhoto.setImageResource(0);
-        if (entity != null && !entity.getMediaUrl().isEmpty()) {
+        try {
 
-            Picasso.with(this).load(tweet.getEntity().getMediaUrl()).transform(new RoundedCornersTransformation(15, 0)).into(ivPhoto);
+            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+            DateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
+            inputFormat.setLenient(true);
+
+            Date twDate = inputFormat.parse(tweet.getCreatedAt());
+            String outputText = outputFormat.format(twDate);
+
+            Date newDate = new Date();
+            long timeDiff = 0;
+            String suffix = "m";
+            timeDiff = getDateDiff(twDate, newDate, TimeUnit.MINUTES);
+            boolean hour = false;
+            if(timeDiff > 60) {
+                timeDiff = getDateDiff(twDate, newDate, TimeUnit.HOURS);
+                suffix = "h";
+                hour = true;
+            }
+            if(timeDiff > 24 && hour) {
+                timeDiff = getDateDiff(twDate, newDate, TimeUnit.DAYS);
+                suffix = "d";
+            }
+
+            tvTime.setText(String.valueOf(timeDiff)+suffix);
+        }
+        catch (ParseException e) {
+            Log.i("SAMY-dtParsEx ", e.getMessage());
+            e.printStackTrace();
+        }        Picasso.with(this)
+                .load(user.getHeaderImageURL())
+                //.transform(new RoundedCornersTransformation(15, 0))
+                .into(ivProfileImg);
+        ivPhoto.setImageResource(0);
+        if (!tweet.getMediaUrl().isEmpty()) {
+
+            Picasso.with(this)
+                    .load(tweet.getMediaUrl())
+                    //.transform(new RoundedCornersTransformation(15, 0))
+                    .into(ivPhoto);
         }
         tvRetweetCount.setText("");
         tvLikeCount.setText("");
@@ -75,15 +142,15 @@ public class DetailActivity extends AppCompatActivity {
         if (tweet.getRetweetCount() > 0) {
             tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
         }
-        if(tweet.getRetweeted()){
+        if(tweet.isRetweeted()){
             ivRetweetsCount.setLiked(true);
 
         }
-        if (tweet.getFavoritesCount() > 0) {
-            tvLikeCount.setText(String.valueOf(tweet.getFavoritesCount()));
+        if (tweet.getFavouritesCount() > 0) {
+            tvLikeCount.setText(String.valueOf(tweet.getFavouritesCount()));
 
         }
-        if(tweet.getfavorited()){
+        if(tweet.isFavorited()){
             ivLike.setLiked(true);
 
         }
@@ -125,6 +192,11 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
     private void favorTweet(final Tweet tweet, final TextView tvFavorCount, final LikeButton ivFavor) {
 
         client.favorTweet(new JsonHttpResponseHandler(){
@@ -133,7 +205,7 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("DEBUG", "favorited" + response.toString());
                 try {
                     if(response.getBoolean("favorited")){
-                        tweet.setFavorite_count(Integer.parseInt(response.getString("favorite_count")));
+                        tweet.setFavouritesCount(Integer.parseInt(response.getString("favorite_count")));
                         ivLike.setLiked(true);
                     }else{
                         ivLike.setLiked(false);
@@ -162,7 +234,7 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("DEBUG", errorResponse.toString());
 
             }
-        }, tweet.getfavorited(), tweet.getRemoteId());
+        }, tweet.isFavorited(), tweet.getUid());
 
     }
 
@@ -174,7 +246,7 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("DEBUG", "retweeted" + response.toString());
                 try {
                     if(response.getBoolean("retweeted")){
-                        tweet.setFavorite_count(Integer.parseInt(response.getString("retweet_count")));
+                        tweet.setRetweetCount(Integer.parseInt(response.getString("retweet_count")));
                         ivRetweetCount.setLiked(true);
 
                     }else {
@@ -201,7 +273,7 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("DEBUG", errorResponse.toString() );
 
             }
-        }, tweet.getRetweeted(), tweet.getRemoteId());
+        }, tweet.isRetweeted(), tweet.getUid());
 
     }
 
@@ -217,7 +289,4 @@ public class DetailActivity extends AppCompatActivity {
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(context));
     }
-*/
-
-
 }

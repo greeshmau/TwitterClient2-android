@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/tvUserName"
-            fontPath="fonts/roboto_medium.ttf"
+            fontPath="fonts/roboto_thin.ttf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -46,7 +46,7 @@
 
         <TextView
             android:id="@+id/tvScreenName"
-            fontPath="fonts/roboto_light.ttf"
+            fontPath="fonts/roboto_thin.ttf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvUserName"
@@ -55,9 +55,10 @@
             android:textColor="#AAB8C2"
             android:textSize="14sp" />
 
-        <com.codepath.apps.chirrup.decorators.LinkifiedTextView
+        <!--<com.codepath.apps.chirrup.decorators.LinkifiedTextView-->
+        <TextView
             android:id="@+id/tvBody"
-            fontPath="fonts/roboto_light.ttf"
+            fontPath="fonts/roboto_thin.ttf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -82,8 +83,8 @@
             tools:src="@drawable/twitter_icon" />
 
         <TextView
-            android:id="@+id/tvTweetTime"
-            fontPath="fonts/roboto_light.ttf"
+            android:id="@+id/tvTime"
+            fontPath="fonts/roboto_thin.ttf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivPhoto"
@@ -97,7 +98,7 @@
             android:id="@+id/ivReply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvTweetTime"
+            android:layout_below="@+id/tvTime"
             app:anim_scale_factor="2.5"
             app:circle_start_color="#FFFFFF"
             app:circle_end_color="#FFFFFF"
@@ -117,7 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="replyToTweet"
-            android:layout_below="@+id/tvTweetTime"
+            android:layout_below="@+id/tvTime"
             android:layout_toRightOf="@+id/ivReply"
             android:paddingLeft="40dp"
             android:paddingTop="5dp"
@@ -137,7 +138,7 @@
             android:id="@+id/tvRetweetCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvTweetTime"
+            android:layout_below="@+id/tvTime"
             android:layout_toRightOf="@+id/ivRetweetsCount"
             android:paddingTop="28dp"
             android:text="" />
@@ -151,7 +152,7 @@
             app:icon_type="heart"
             app:is_enabled="true"
             app:liked="false"
-            android:layout_below="@+id/tvTweetTime"
+            android:layout_below="@+id/tvTime"
             android:layout_toRightOf="@+id/ivRetweetsCount"
             android:paddingLeft="50dp"
             android:paddingTop="15dp"/>
@@ -161,7 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_below="@+id/tvTweetTime"
+            android:layout_below="@+id/tvTime"
             android:layout_toRightOf="@+id/ivLike"
             android:paddingTop="30dp"/>
     </RelativeLayout>

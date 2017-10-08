@@ -2,7 +2,6 @@ package com.gumapathi.codepath.twitteroauthclient.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -39,8 +38,8 @@ public class DirectMessageFragement extends Fragment {
     @BindView(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
     @Nullable
-    @BindView(R.id.fabCompose)
-    FloatingActionButton fabCompose;
+    //@BindView(R.id.fabCompose)
+    //FloatingActionButton fabCompose;
     @BindView(R.id.rvMessages)
     RecyclerView rvMessages;
     @BindView(R.id.ldProgress)

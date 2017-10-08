@@ -32,6 +32,7 @@ public class TwitterApplication extends Application {
 
 		TwitterApplication.context = this;
 		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+				.setDefaultFontPath("fonts/roboto_thin.ttf")
 				.setFontAttrId(R.attr.fontPath)
 				.build()
 		);

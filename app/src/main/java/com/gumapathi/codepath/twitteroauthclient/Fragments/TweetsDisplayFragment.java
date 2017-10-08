@@ -1,7 +1,10 @@
 package com.gumapathi.codepath.twitteroauthclient.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,23 +13,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gumapathi.codepath.twitteroauthclient.Activities.DetailActivity;
 import com.gumapathi.codepath.twitteroauthclient.Adapters.TweetAdapter;
 import com.gumapathi.codepath.twitteroauthclient.Helpers.EndlessRecyclerViewScrollListener;
+import com.gumapathi.codepath.twitteroauthclient.Helpers.ItemClickSupport;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.R;
 
 import org.json.JSONArray;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TweetsDisplayFragment extends Fragment {
+public abstract class TweetsDisplayFragment extends Fragment implements ComposeTweetDialogFragment.ComposeTweetDialogListener {
 
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
     EndlessRecyclerViewScrollListener scrollListener;
     private SwipeRefreshLayout swipeContainer;
+    ComposeTweetDialogFragment composeTweetDialogFragment;
 
 
     public TweetsDisplayFragment() {
@@ -55,6 +62,18 @@ public abstract class TweetsDisplayFragment extends Fragment {
         rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(tweetAdapter);
 
+        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Tweet tweet = tweets.get(position);
+                        Intent intent = new Intent(getActivity(), DetailActivity.class);
+                        intent.putExtra("tweet", Parcels.wrap(tweet));
+                        intent.putExtra("user", Parcels.wrap(tweet.getUser()));
+                        startActivity(intent);
+                    }
+                }
+        );
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -80,6 +99,13 @@ public abstract class TweetsDisplayFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         populateTimeline(0, false);
+        FloatingActionButton fabCompose = (FloatingActionButton) v.findViewById(R.id.fabCompose);
+        fabCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                composeNewTweet(v);
+            }
+        });
         return v;
     }
 
@@ -129,4 +155,21 @@ public abstract class TweetsDisplayFragment extends Fragment {
 
     abstract void populateTimeline(int page, boolean refreshing);
 
+    public void composeNewTweet(View view) {
+        //Toast.makeText(this, "Compose clicked", Toast.LENGTH_LONG).show();
+        FragmentManager fm = getFragmentManager();
+        composeTweetDialogFragment = ComposeTweetDialogFragment.newInstance("Filter");
+        composeTweetDialogFragment.setTargetFragment(this,20);
+        composeTweetDialogFragment.show(fm, "fragment_alert");
+    }
+
+    @Override
+    public void onFinishComposeTweetDialog(Bundle bundle) {
+        if (bundle != null) {
+            Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
+            if(getParentFragment().equals(HomeFragment.class)) {
+                addSingleTweetToTop(postedTweet);
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.gumapathi.codepath.twitteroauthclient.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -158,5 +160,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void onFollowersCountClick(View view) {
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

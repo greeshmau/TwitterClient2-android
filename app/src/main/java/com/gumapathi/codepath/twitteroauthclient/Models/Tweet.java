@@ -47,6 +47,18 @@ public class Tweet extends BaseModel{
     @Column
     boolean favorited = false;
 
+
+    public boolean isRetweeted() {
+        return retweeted;
+    }
+
+    public void setRetweeted(boolean retweeted) {
+        this.retweeted = retweeted;
+    }
+
+    @Column
+    boolean retweeted = false;
+
     public Tweet() {
     }
 

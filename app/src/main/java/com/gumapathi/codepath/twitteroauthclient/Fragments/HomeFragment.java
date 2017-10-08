@@ -1,17 +1,11 @@
 package com.gumapathi.codepath.twitteroauthclient.Fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet_Table;
-import com.gumapathi.codepath.twitteroauthclient.R;
 import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -19,7 +13,6 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -30,14 +23,13 @@ import static com.gumapathi.codepath.twitteroauthclient.Utils.Utils.checkForInte
  * Created by gumapathi on 10/1/17.
  */
 
-public class HomeFragment extends TweetsDisplayFragment implements ComposeTweetDialogFragment.ComposeTweetDialogListener{
+public class HomeFragment extends TweetsDisplayFragment {
 
     boolean startOfOldTweets = false;
     boolean endOfOldTweets = false;
     private TwitterClient client;
     boolean noNewTweets = true;
     public static final String ARG_PAGE = "ARG_PAGE";
-    ComposeTweetDialogFragment composeTweetDialogFragment;
 
     public static HomeFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -177,19 +169,5 @@ public class HomeFragment extends TweetsDisplayFragment implements ComposeTweetD
     }
 
 
-    public void composeNewTweet(View view) {
-        //Toast.makeText(this, "Compose clicked", Toast.LENGTH_LONG).show();
-        FragmentManager fm = getFragmentManager();
-        composeTweetDialogFragment = ComposeTweetDialogFragment.newInstance("Filter");
-        composeTweetDialogFragment.setTargetFragment(this,20);
-        composeTweetDialogFragment.show(fm, "fragment_alert");
-    }
 
-    @Override
-    public void onFinishComposeTweetDialog(Bundle bundle) {
-        if (bundle != null) {
-            Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
-            addSingleTweetToTop(postedTweet);
-        }
-    }
 }

@@ -1,6 +1,7 @@
 package com.gumapathi.codepath.twitteroauthclient;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.github.scribejava.apis.TwitterApi;
@@ -118,7 +119,45 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("count", 20);
 		params.put("since_id", 1);
-
 		getClient().get(apiUrl, null, repsonseHandler);
+	}
+
+	public void favorTweet(AsyncHttpResponseHandler repsonseHandler, Boolean favourite, long id) {
+		String apiUrl;
+		if(favourite){
+			apiUrl = getApiUrl("favorites/destroy.json");
+		}
+		else{
+			apiUrl = getApiUrl("favorites/create.json");
+		}
+		//specify the params
+		RequestParams params = new RequestParams();
+		params.put("id", id);
+		getClient().post(apiUrl, params, repsonseHandler);
+	}
+
+	public void reTweet(AsyncHttpResponseHandler repsonseHandler, Boolean reTweet, long id) {
+		String apiUrl;
+		if(reTweet) {
+			apiUrl = getApiUrl("statuses/unretweet/:id.json");
+		}
+		else{
+			apiUrl = getApiUrl("statuses/retweet/:id.json");
+		}
+		//specify the params
+		apiUrl = apiUrl.replace(":id", String.valueOf(id));
+		Log.i("TAG", apiUrl);
+		getClient().post(apiUrl, null, repsonseHandler);
+	}
+
+	public void composeReTweet(AsyncHttpResponseHandler repsonseHandler, String tweetBody, Boolean isReply, long id) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		//specify the params
+		RequestParams params = new RequestParams();
+		params.put("status", tweetBody);
+		if (isReply) {
+			params.put("in_reply_to_status_id", id);
+		}
+		getClient().post(apiUrl, params, repsonseHandler);
 	}
 }

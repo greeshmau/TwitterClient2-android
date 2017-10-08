@@ -1,5 +1,6 @@
 package com.gumapathi.codepath.twitteroauthclient.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by gumapathi on 10/1/17.
@@ -31,6 +33,11 @@ public class TabbedLayoutActivity extends AppCompatActivity {
     ImageView ivProfilePhoto;
     ViewPager viewPager;
     private TwitterClient client;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

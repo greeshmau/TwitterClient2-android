@@ -15,123 +15,130 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!--<android.support.design.widget.CollapsingToolbarLayout
+        <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/colorPrimary"
             app:expandedTitleTextAppearance="@style/CollapsingToolbarLayoutExpandedTextStyle"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <RelativeLayout
-            android:id="@+id/rlUserHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ivHeaderPic"
-            android:background="@android:color/white">
-
-            <ImageView
-                android:id="@+id/ivHeaderPic"
+            <RelativeLayout
+                android:id="@+id/rlUserHeader"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:src="@drawable/loading" />
-
-            <ImageView
-                android:id="@+id/ivProfilePic"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="80dp"
-                android:src="@drawable/twitter_icon" />
-
-            <TextView
-                android:id="@+id/tvName"
-                fontPath="fonts/roboto_medium.ttf"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/ivProfilePic"
-                android:layout_marginLeft="40dp"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="20sp"
-                tools:text="Name" />
+                android:layout_below="@+id/ivHeaderPic"
+                android:background="@android:color/white">
 
-            <TextView
-                android:id="@+id/tvScreenName"
-                fontPath="fonts/roboto_light.ttf"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/ivHeaderPic"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:src="@drawable/loading" />
+
+                <ImageView
+                    android:id="@+id/ivProfilePic"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="80dp"
+                    android:src="@drawable/twitter_icon" />
+
+                <TextView
+                    android:id="@+id/tvName"
+                    fontPath="fonts/roboto_medium.ttf"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/ivProfilePic"
+                    android:layout_marginLeft="40dp"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="20sp"
+                    tools:text="Name" />
+
+                <TextView
+                    android:id="@+id/tvScreenName"
+                    fontPath="fonts/roboto_thin.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tvName"
+                    android:layout_marginLeft="40dp"
+                    android:textColor="#AAB8C2"
+                    android:textSize="12sp"
+                    tools:text="@string/screenname" />
+
+                <TextView
+                    android:id="@+id/tvDescription"
+                    fontPath="fonts/roboto_light.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tvScreenName"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="40dp"
+                    android:textColor="@color/primaryTextColor"
+                    android:textColorLink="@color/colorPrimary"
+                    tools:text="description" />
+
+                <TextView
+                    android:id="@+id/tvFollowing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tvDescription"
+                    fontPath="fonts/roboto_thin.ttf"
+                    android:layout_marginLeft="40dp"
+                    android:onClick="onFollowingCountClick"
+                    android:paddingEnd="20dp"
+                    android:textColor="#AAB8C2"
+
+                    tools:text="Following" />
+
+                <TextView
+                    android:id="@+id/tvFollowers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fontPath="fonts/roboto_thin.ttf"
+                    android:layout_below="@+id/tvDescription"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toEndOf="@+id/tvFollowing"
+                    android:onClick="onFollowersCountClick"
+                    android:textColor="#AAB8C2"
+                    tools:text="Followers" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+            <com.astuetz.PagerSlidingTabStrip
+                android:id="@+id/tbLayout"
+                android:layout_below="@id/rlUserHeader"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/tvName"
-                android:layout_marginLeft="40dp"
-                android:textColor="#AAB8C2"
-                android:textSize="12sp"
-                tools:text="@string/screenname" />
-
-            <TextView
-                android:id="@+id/tvDescription"
-                fontPath="fonts/roboto_light.ttf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/tvScreenName"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="40dp"
-                android:textColor="@color/primaryTextColor"
-                android:textColorLink="@color/colorPrimary"
-                tools:text="description" />
-
-            <TextView
-                android:id="@+id/tvFollowing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/tvDescription"
-                android:layout_marginLeft="40dp"
-                android:onClick="onFollowingCountClick"
-                android:paddingEnd="20dp"
-                android:textColor="#AAB8C2"
-
-                tools:text="Following" />
-
-            <TextView
-                android:id="@+id/tvFollowers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvDescription"
-                android:layout_marginBottom="5dp"
-                android:layout_toEndOf="@+id/tvFollowing"
-                android:onClick="onFollowersCountClick"
-                android:textColor="#AAB8C2"
-                tools:text="Followers" />
-        </RelativeLayout>
-
-        <!--<android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />-->
-        <com.astuetz.PagerSlidingTabStrip
-            android:id="@+id/tbLayout"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@android:color/white"
-            app:pstsDividerColor="@android:color/white"
-            app:pstsIndicatorColor="@color/colorPrimary"
-            app:pstsIndicatorHeight="3dp"
-            app:pstsShouldExpand="true"
-            app:pstsTabPaddingLeftRight="14dp"
-            app:pstsTextAllCaps="true"
-            app:pstsUnderlineColor="@color/colorPrimary"
-            app:pstsUnderlineHeight="0dp"
-            app:tabMode="fixed" />
-        <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+                android:background="@android:color/white"
+                android:layout_gravity="bottom"
+                app:pstsDividerColor="@android:color/white"
+                app:pstsIndicatorColor="@color/colorPrimary"
+                app:pstsIndicatorHeight="3dp"
+                app:pstsShouldExpand="true"
+                app:pstsTabPaddingLeftRight="14dp"
+                app:pstsTextAllCaps="true"
+                app:pstsUnderlineColor="@color/colorPrimary"
+                app:pstsUnderlineHeight="0dp"
+                app:tabMode="fixed" />
+        </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 

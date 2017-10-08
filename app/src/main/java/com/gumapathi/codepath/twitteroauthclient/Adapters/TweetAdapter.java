@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.gumapathi.codepath.twitteroauthclient.Activities.ProfileActivity;
-import com.gumapathi.codepath.twitteroauthclient.Decorators.LinkifiedTextView;
 import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.R;
 import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
@@ -182,7 +181,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
         public TextView tvLikeCount;
         public TextView tvRetweetCount;
 
-        public LinkifiedTextView tvBody;
+        public TextView tvBody;
 
         public ImageView ivProfileImage;
         public ImageView ivPhoto;
@@ -193,7 +192,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.TweetViewHol
             super(view);
             ivProfileImage = (ImageView)view.findViewById((com.gumapathi.codepath.twitteroauthclient.R.id.ivProfileImage));
             tvUsername = (TextView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.tvUserName);
-            tvBody = (LinkifiedTextView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.tvBody);
+            tvBody = (TextView) view.findViewById(com.gumapathi.codepath.twitteroauthclient.R.id.tvBody);
             tvTime = (TextView) view.findViewById(R.id.tvTime);
             tvScreenName = (TextView) view.findViewById(R.id.tvScreenName);
             tvLikeCount = (TextView) view.findViewById(R.id.tvLikeCount);
