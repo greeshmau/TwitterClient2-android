@@ -5,13 +5,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
-import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -71,9 +69,9 @@ public class TweetSearchFragment  extends TweetsDisplayFragment {
                     //clearItems();
                     try {
                         if (refreshing) {
-                            //addAllItems(true,response.toJSONArray());
+                            addAllItems(true,response.getJSONArray("statuses"));
                         } else {
-                            //addAllItems(false,response);;
+                            addAllItems(false,response.getJSONArray("statuses"));;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
