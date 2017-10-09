@@ -97,17 +97,20 @@ public class UserTimelineFragment extends TweetsDisplayFragment {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    Log.i("SAMY-", errorResponse.toString());
+                    Log.i("SAMY-", "error");
                     throwable.printStackTrace();
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.i("SAMY-", errorResponse.toString());
+                    Log.i("SAMY-", "error");
                     throwable.printStackTrace();
                 }
             });
             onFinishLoadMore();
         }
+    }
+    @Override
+    public void onFinishComposeTweetDialog(Bundle bundle) {
     }
 }

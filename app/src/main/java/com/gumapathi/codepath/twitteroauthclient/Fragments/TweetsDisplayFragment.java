@@ -161,14 +161,4 @@ public abstract class TweetsDisplayFragment extends Fragment implements ComposeT
         composeTweetDialogFragment.setTargetFragment(this,20);
         composeTweetDialogFragment.show(fm, "fragment_alert");
     }
-
-    @Override
-    public void onFinishComposeTweetDialog(Bundle bundle) {
-        if (bundle != null) {
-            Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
-            if(getParentFragment().getClass().equals(HomeFragment.class)) {
-                addSingleTweetToTop(postedTweet);
-            }
-        }
-    }
 }

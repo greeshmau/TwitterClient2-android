@@ -1,6 +1,7 @@
 package com.gumapathi.codepath.twitteroauthclient.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.gumapathi.codepath.twitteroauthclient.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by gumapathi on 10/7/17.
@@ -33,11 +36,23 @@ public class ImagesArrayAdapter extends ArrayAdapter<Tweet> {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_image, parent, false);
         ImageView ivImage = (ImageView)convertView.findViewById(R.id.ivImage);
         if(!tweet.getMediaUrl().isEmpty()) {
-        Glide.with(getContext())
+            Log.i("SAMY-media-url", tweet.getMediaUrl().toString());
+
+            /*Glide.with(this)
+                    .load(tweet.getMediaUrl())
+                    .bitmapTransform(new RoundedCornersTransformation(this,15, 0))
+                    .into(ivPhoto);
+            Glide.with(mContext)
                 .load(tweet.getMediaUrl())
-                //.placeholder(R.drawable.loading)
+                    .bitmapTransform(new RoundedCornersTransformation(mContext,15, 0))
+                    //.placeholder(R.drawable.loading)
                 //.error(R.drawable.image_unavailable)
-                .into(ivImage);
+                .into(ivImage);*/
+            Picasso.with(mContext)
+                    .load(tweet.getMediaUrl())
+                    //.transform(new RoundedCornersTransformation(15, 0))
+                    .into(ivImage);
+
 
         }
         else {

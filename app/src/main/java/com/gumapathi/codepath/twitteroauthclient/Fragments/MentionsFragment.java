@@ -100,4 +100,7 @@ public class MentionsFragment extends TweetsDisplayFragment {
             onFinishLoadMore();
         }
     }
+    @Override
+    public void onFinishComposeTweetDialog(Bundle bundle) {
+    }
 }

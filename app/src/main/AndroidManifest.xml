@@ -47,6 +47,7 @@
         </activity>
         <activity android:name=".Activities.ProfileActivity"></activity>
         <activity android:name=".Activities.DetailActivity"></activity>
+        <activity android:name=".Activities.SearchTweetsActivity"></activity>
     </application>
 
 </manifest>

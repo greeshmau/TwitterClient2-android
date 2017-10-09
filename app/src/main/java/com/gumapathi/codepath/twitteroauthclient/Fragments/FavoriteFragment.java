@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.gumapathi.codepath.twitteroauthclient.Models.Tweet;
 import com.gumapathi.codepath.twitteroauthclient.R;
 import com.gumapathi.codepath.twitteroauthclient.TwitterApplication;
 import com.gumapathi.codepath.twitteroauthclient.TwitterClient;
@@ -13,6 +15,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -99,5 +102,8 @@ public class FavoriteFragment extends TweetsDisplayFragment {
             });
             onFinishLoadMore();
         }
+    }
+    @Override
+    public void onFinishComposeTweetDialog(Bundle bundle) {
     }
 }

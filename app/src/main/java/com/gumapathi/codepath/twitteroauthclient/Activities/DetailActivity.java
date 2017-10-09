@@ -128,9 +128,13 @@ public class DetailActivity extends AppCompatActivity {
         }
         if(!user.getProfileImageURL().isEmpty()) {
 
-            Glide.with(this)
+            /*Glide.with(this)
                     .load(user.getProfileImageURL())
                     .bitmapTransform(new RoundedCornersTransformation(this,15, 0))
+                    .into(ivProfileImg);*/
+            Picasso.with(this)
+                    .load(user.getProfileImageURL())
+                    //.transform(new RoundedCornersTransformation(15, 0))
                     .into(ivProfileImg);
         }
         else {
@@ -139,9 +143,13 @@ public class DetailActivity extends AppCompatActivity {
         ivPhoto.setImageResource(0);
         if (!tweet.getMediaUrl().isEmpty()) {
 
-            Glide.with(this)
+            /*Glide.with(this)
                     .load(tweet.getMediaUrl())
                     .bitmapTransform(new RoundedCornersTransformation(this,15, 0))
+                    .into(ivPhoto);*/
+            Picasso.with(this)
+                    .load(tweet.getMediaUrl())
+                    //.transform(new RoundedCornersTransformation(15, 0))
                     .into(ivPhoto);
         }
         tvRetweetCount.setText("");

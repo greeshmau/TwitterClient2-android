@@ -13,6 +13,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -168,6 +169,14 @@ public class HomeFragment extends TweetsDisplayFragment {
         onFinishLoadMore();
     }
 
-
+    @Override
+    public void onFinishComposeTweetDialog(Bundle bundle) {
+        if (bundle != null) {
+            Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
+            if(getParentFragment().getClass().equals(HomeFragment.class)) {
+                addSingleTweetToTop(postedTweet);
+            }
+        }
+    }
 
 }

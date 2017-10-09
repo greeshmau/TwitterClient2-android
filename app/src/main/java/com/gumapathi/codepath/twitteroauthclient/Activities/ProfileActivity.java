@@ -2,6 +2,7 @@ package com.gumapathi.codepath.twitteroauthclient.Activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -41,8 +42,8 @@ public class ProfileActivity extends AppCompatActivity {
     TextView tvFollowers;
     @BindView(R.id.tvFollowing)
     TextView tvFollowing;
-    //@BindView(R.id.collapsing_toolbar)
-    //CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.ivHeaderPic)
     ImageView ivHeaderPic;
     @BindView(R.id.vpProfile)
@@ -86,6 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void lookupUser(String screenName) {
         Log.i("SAMY-lookupUser", screenName);
+        screenName = screenName.replace("@", "");
         client.lookupUser(screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -133,27 +135,37 @@ public class ProfileActivity extends AppCompatActivity {
         //ft.commit();
 
         //collapsingToolbar.setTitle(user.getName());
+        Log.i("SAMY", "inside setup");
 
         tvName.setText(user.getName());
         tvScreenName.setText(user.getScreenName());
         tvName.setText(user.getName());
         tvDescription.setText(user.getDescription());
-        String followers = "Followers " + String.valueOf(user.getFollowersCount());
-        String following = "Following " + String.valueOf(user.getFollowingCount());
+        String followers = String.valueOf(user.getFollowersCount());
+        String following = String.valueOf(user.getFollowingCount());
         tvFollowers.setText(followers);
         tvFollowing.setText(following);
 
         Log.i("SAMY-getProfileImageU", followers);
         Log.i("SAMY-getHeaderImageURL", following);
 
-        Glide.with(getApplicationContext())
+        /*Glide.with(getApplicationContext())
                 .load(user.getProfileImageURL())
                 .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(), 30, 0, RoundedCornersTransformation.CornerType.ALL))
+                .into(ivProfilePic);*/
+        Picasso.with(this)
+                .load(user.getProfileImageURL())
+                //.transform(new RoundedCornersTransformation(15, 0))
                 .into(ivProfilePic);
+
         if(!user.getHeaderImageURL().isEmpty()) {
-            Glide.with(getApplicationContext())
+            /*Glide.with(getApplicationContext())
                     .load(user.getHeaderImageURL())
                     .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(),30, 0, RoundedCornersTransformation.CornerType.ALL))
+                    .into(ivHeaderPic);*/
+            Picasso.with(this)
+                    .load(user.getHeaderImageURL())
+                    //.transform(new RoundedCornersTransformation(15, 0))
                     .into(ivHeaderPic);
         }
     }

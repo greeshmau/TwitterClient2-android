@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:contentScrim="@color/colorPrimary"
             app:expandedTitleTextAppearance="@style/CollapsingToolbarLayoutExpandedTextStyle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -28,7 +29,7 @@
                 android:id="@+id/rlUserHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ivHeaderPic"
+                android:paddingBottom="20dp"
                 android:background="@android:color/white">
 
                 <ImageView
@@ -52,7 +53,6 @@
                 <TextView
                     android:id="@+id/tvName"
                     fontPath="fonts/roboto_medium.ttf"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -60,6 +60,7 @@
                     android:layout_marginLeft="40dp"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="20sp"
+                    android:textStyle="bold"
                     tools:text="Name" />
 
                 <TextView
@@ -89,28 +90,67 @@
 
                 <TextView
                     android:id="@+id/tvFollowing"
+                    fontPath="fonts/roboto_medium.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/tvDescription"
-                    fontPath="fonts/roboto_thin.ttf"
                     android:layout_marginLeft="40dp"
+                    android:layout_toRightOf="@id/tvName"
                     android:onClick="onFollowingCountClick"
-                    android:paddingEnd="20dp"
-                    android:textColor="#AAB8C2"
-
-                    tools:text="Following" />
-
+                    android:textStyle="bold"
+                    android:paddingEnd="2dp"
+                    android:textColor="#000000"
+                    tools:text="12" />
                 <TextView
-                    android:id="@+id/tvFollowers"
+                    android:id="@+id/tvFollowingText"
+                    fontPath="fonts/roboto_medium.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    fontPath="fonts/roboto_thin.ttf"
                     android:layout_below="@+id/tvDescription"
                     android:layout_marginBottom="5dp"
                     android:layout_toEndOf="@+id/tvFollowing"
                     android:onClick="onFollowersCountClick"
                     android:textColor="#AAB8C2"
+                    android:textStyle="bold"
+                    android:text="Following" />
+                <TextView
+                    android:id="@+id/tvFollowers"
+                    fontPath="fonts/roboto_medium.ttf"
+                    android:layout_marginLeft="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvDescription"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toEndOf="@+id/tvFollowingText"
+                    android:onClick="onFollowersCountClick"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:paddingEnd="2dp"
+                    tools:text="12" />
+                <TextView
+                    android:id="@+id/tvFollowersText"
+                    fontPath="fonts/roboto_medium.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvDescription"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toEndOf="@+id/tvFollowers"
+                    android:onClick="onFollowersCountClick"
+                    android:textColor="#AAB8C2"
+                    android:textStyle="bold"
+                    android:text="Followers" />
+
+                <TextView
+                    android:id="@+id/tvummy"
+                    fontPath="fonts/roboto_thin.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvFollowing"
+                    android:layout_marginBottom="5dp"
+                    android:onClick="onFollowersCountClick"
+                    android:textColor="#AAB8C2"
+                    android:textSize="18dp"
                     tools:text="Followers" />
             </RelativeLayout>
 
@@ -124,11 +164,10 @@
 
             <com.astuetz.PagerSlidingTabStrip
                 android:id="@+id/tbLayout"
-                android:layout_below="@id/rlUserHeader"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
+                android:layout_height="25dp"
                 android:layout_gravity="bottom"
+                android:background="@android:color/white"
                 app:pstsDividerColor="@android:color/white"
                 app:pstsIndicatorColor="@color/colorPrimary"
                 app:pstsIndicatorHeight="3dp"

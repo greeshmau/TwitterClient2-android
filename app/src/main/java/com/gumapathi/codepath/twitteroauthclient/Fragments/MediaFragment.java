@@ -78,14 +78,15 @@ public class MediaFragment extends Fragment {
     EndlessScrollListener scrollListener = new EndlessScrollListener() {
         @Override
         public boolean onLoadMore(int page, int totalItemsCount) {
-            populatePhotos(maxID);
+            populatePhotos(0);
             return true;
         }
     };
 
     public void populatePhotos(long max_id) {
+        Log.i("SAMY-", "populatePhotos");
 
-        client.getUserTimeline(max_id,screenName, handler);
+        client.getUserTimeline(0,screenName, handler);
     }
 
     JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
@@ -115,7 +116,7 @@ public class MediaFragment extends Fragment {
 
         @Override
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-            Log.v("SAMY-media-err", errorResponse.toString());
+            Log.i("SAMY-media-err", errorResponse.toString());
         }
     };
 }
