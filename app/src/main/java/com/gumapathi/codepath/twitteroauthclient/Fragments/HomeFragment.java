@@ -130,8 +130,8 @@ public class HomeFragment extends TweetsDisplayFragment {
         if (!endOfOldTweets || !isOnline || noNewTweets) {
             Log.i("SAMY", "old tweets " + String.valueOf(startOfOldTweets) + " page - " + String.valueOf(page));
             addAllItems(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
-            /*tweets.addAll(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
-            tweetAdapter.notifyDataSetChanged();*/
+            //tweets.addAll(SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).queryList());
+            //tweetAdapter.notifyDataSetChanged();
             endOfOldTweets = true;
         }
         if(endOfOldTweets && isOnline ){
@@ -173,9 +173,9 @@ public class HomeFragment extends TweetsDisplayFragment {
     public void onFinishComposeTweetDialog(Bundle bundle) {
         if (bundle != null) {
             Tweet postedTweet = (Tweet) Parcels.unwrap(bundle.getParcelable("PostedTweet"));
-            if(getParentFragment().getClass().equals(HomeFragment.class)) {
+
                 addSingleTweetToTop(postedTweet);
-            }
+
         }
     }
 

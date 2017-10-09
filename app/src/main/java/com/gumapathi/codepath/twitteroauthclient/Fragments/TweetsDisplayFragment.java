@@ -114,8 +114,10 @@ public abstract class TweetsDisplayFragment extends Fragment implements ComposeT
             Log.i("SAMY", "setting all tweets " + String.valueOf(newTweets.size()));
             if (refreshing) {
                 tweets.addAll(0, newTweets);
+                tweetAdapter.notifyDataSetChanged();
             } else {
                 tweets.addAll(newTweets);
+                tweetAdapter.notifyDataSetChanged();
             }
             tweetAdapter.notifyDataSetChanged();
         } catch (Exception e) {

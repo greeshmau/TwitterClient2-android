@@ -24,11 +24,11 @@ The following **optional** features are implemented:
 * [ ] User can view following / followers list through the profile
 * [ ] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
 * [ ] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
-* [ ] User can **"reply" to any tweet on their home timeline**
-  * [ ] The user that wrote the original tweet is automatically "@" replied in compose
+* [X] User can **"reply" to any tweet on their home timeline**
+  * [X] The user that wrote the original tweet is automatically "@" replied in compose
 * [X] User can click on a tweet to be **taken to a "detail view"** of that tweet
  * [X] User can take favorite (and unfavorite) or retweet actions on a tweet
-* [ ] User can **search for tweets matching a particular query** and see results
+* [X] User can **search for tweets matching a particular query** and see results
 * [ ] Usernames and hashtags are styled and clickable within tweets [using clickable spans](http://guides.codepath.com/android/Working-with-the-TextView#creating-clickable-styled-spans)
 
 The following **bonus** features are implemented:
@@ -41,12 +41,13 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [ ] List anything else that you can get done to improve the app functionality!
+    *[X] Added media/image under profile view with its own adapter
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='./twitter2Demo6.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -61,7 +62,7 @@ Describe any challenges encountered while building the app.
 
 ## License
 
-    Copyright 2017 Codepath/Greeshma
+    Copyright 2017 Codepath(Oauth)/Greeshma
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
